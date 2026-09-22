@@ -1,16 +1,19 @@
 services:
   mongodb:
-    image: mongo:6
-    container_name: mongo-db
+    image: mongo:latest
+    container_name: mongodb
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
     volumes:
       - mongo-data:/data/db
     restart: unless-stopped
     networks:
       - todo_app
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:${MONGO_PORT}/test --quiet
       interval: 10s
       timeout: 10s
       retries: 5
@@ -21,11 +24,14 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017
-      - ME_CONFIG_BASICAUTH_USERNAME=admin
-      - ME_CONFIG_BASICAUTH_PASSWORD=password
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD}
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - todo_app
@@ -33,12 +39,16 @@ services:
   backend:
     build: ./backend
     container_name: backend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mongodb
     env_file:
-      - path: .env
+      - .env
+    environment:
+      MONGO_URI: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongodb:27017/${MONGO_DB_NAME}
+      PORT: ${BACKEND_PORT}
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    depends_on:
+      mongodb:
+        condition: service_healthy
 
     restart: unless-stopped
 
@@ -48,12 +58,14 @@ services:
   frontend:
     build: ./frontend
     container_name: frontend
+    env_file:
+      - .env
+    environment:
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT}:5173"
     depends_on:
       - backend
-    env_file:
-    - path: .env
 
     networks:
       - todo_app

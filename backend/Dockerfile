@@ -1,16 +1,16 @@
-FROM node:26-alpine
+FROM node:24-alpine
 
 WORKDIR /backend
 
-COPY package*.json ./
-
 RUN npm install -g pnpm
+
+COPY package*.json pnpm-lock.yaml ./
 
 RUN pnpm install
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 5000
 
 
 CMD ["pnpm", "dev"]
