@@ -4,13 +4,18 @@ const Schema = mongoose.Schema;
 
 const todoSchema = new Schema(
   {
-    title: {
+    text: {
       type: String,
       required: true,
     },
-    content: String,
+    completed: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );
 
-export const Todo = mongoose.model("Todo", todoSchema);
+const Todo = mongoose.model("Todo", todoSchema);
+
+export default Todo;
