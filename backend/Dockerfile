@@ -4,6 +4,8 @@ WORKDIR /backend
 
 RUN npm install -g pnpm
 
+RUN pnpm approve-builds esbuild
+
 COPY package*.json pnpm-lock.yaml ./
 
 RUN pnpm install

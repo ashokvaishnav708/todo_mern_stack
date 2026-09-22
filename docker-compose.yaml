@@ -50,8 +50,6 @@ services:
       mongodb:
         condition: service_healthy
 
-    restart: unless-stopped
-
     networks:
       - todo_app
 
