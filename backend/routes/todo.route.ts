@@ -19,7 +19,7 @@ router.post("/", async (req: Request, res: Response) => {
   });
   try {
     const newTodo = await todo.save();
-    response.status(201).json(newTodo);
+    res.status(201).json(newTodo);
   } catch (error) {
     res.status(400).json({ message: (error as Error).message });
   }
@@ -34,7 +34,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
     }
 
     const updatedTodo = await todo.save();
-    res.json(updatedTodo);
+    res.status(201).json(updatedTodo);
   } catch (error) {
     res.status(400).json({ message: (error as Error).message });
   }
