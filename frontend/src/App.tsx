@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { MdOutlineDone, MdModeEditOutline } from "react-icons/md";
-import { IoClipboardOutline, IoClose } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
 
-  const addTodo = async (e: Event) => {
+  const addTodo = async (e: SubmitEvent) => {
     e.preventDefault();
 
     if (!newTodo.trim()) return;
