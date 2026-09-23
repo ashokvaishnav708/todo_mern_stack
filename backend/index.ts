@@ -1,5 +1,4 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 
 import { connectDB } from "./config/db";
@@ -7,7 +6,6 @@ import { connectDB } from "./config/db";
 import todoRoutes from "./routes/todo.route";
 
 const app = express();
-dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
