@@ -33,6 +33,10 @@ router.patch("/:id", async (req: Request, res: Response) => {
       todo.text = req.body.text;
     }
 
+    if (req.body.completed !== undefined) {
+      todo.completed = req.body.completed;
+    }
+
     const updatedTodo = await todo.save();
     res.status(201).json(updatedTodo);
   } catch (error) {
