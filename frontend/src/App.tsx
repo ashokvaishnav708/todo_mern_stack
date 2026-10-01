@@ -103,7 +103,7 @@ function App() {
             className="outline-none px-3 py-2 text-gray-700 placeholder-gray-400 flex-1"
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
-            placeholder="What needs to eb done?"
+            placeholder="What needs to be done?"
             required
           />
           <button
