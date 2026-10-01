@@ -1,6 +1,6 @@
 FROM node:24-alpine
 
-WORKDIR /backend
+WORKDIR /frontend
 
 COPY package*.json pnpm-lock.yaml ./
 
